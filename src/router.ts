@@ -22,18 +22,22 @@ import { authMiddleware } from "./middleware/AuthMiddleware";
 export const router = Router();
 
 // Users
-router.post("/user", createUser);
-router.get("/user", getAllUsers);
-router.delete("/user/delete-users", deleteManyUser);
+router.post("/user", authMiddleware(["Administrador", "Gerente"]), createUser);
+router.get("/user", authMiddleware(["Administrador", "Gerente"]), getAllUsers);
+router.delete(
+  "/user/delete-users",
+  authMiddleware(["Administrador"]),
+  deleteManyUser
+);
 
 // Accesses
-router.post("/access", createAccess);
-router.get(
-  "/access",
-  authMiddleware(["Administrador", "Gerente"]),
-  getAccesses
+router.post("/access", authMiddleware(["Administrador"]), createAccess);
+router.get("/access", authMiddleware(["Administrador"]), getAccesses);
+router.delete(
+  "/access/delete-accesses",
+  authMiddleware(["Administrador"]),
+  deleteManyAccesses
 );
-router.delete("/access/delete-accesses", deleteManyAccesses);
 
 // Ticket
 router.post("/ticket/:userId", createTicket);
