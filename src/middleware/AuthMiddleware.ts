@@ -1,4 +1,3 @@
-import { Access } from "./../../node_modules/.prisma/client/index.d";
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import { prisma } from "../database/prisma";
@@ -69,7 +68,6 @@ export function authMiddleware(permissions?: string[]) {
           return res.status(403).json({ error: "Acesso negado" });
         }
       }
-
       return next();
     } catch (error) {
       return res.status(401).json({ error: "Token inválido." });
