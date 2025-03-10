@@ -63,6 +63,7 @@ export const createUser = async (req: Request, res: Response) => {
         name: true,
         email: true,
         position: true,
+        status: true,
         Access: {
           select: {
             name: true,
@@ -85,6 +86,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
         name: true,
         email: true,
         position: true,
+        status: true,
         Access: {
           select: {
             name: true,
