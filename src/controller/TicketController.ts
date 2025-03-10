@@ -127,3 +127,13 @@ export const getTicketsByUser = async (req: Request, res: Response) => {
     return res.status(404).json(error);
   }
 };
+
+export const deleteManyTickets = async (req: Request, res: Response) => {
+  try {
+    await prisma.ticket.deleteMany();
+
+    return res.status(200).json({ message: "Tickets deletados" });
+  } catch (error) {
+    return res.status(400).json({ message: "Erro desconhecido", error });
+  }
+};

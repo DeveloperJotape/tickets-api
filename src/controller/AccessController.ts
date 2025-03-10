@@ -25,3 +25,13 @@ export const getAccesses = async (req: Request, res: Response) => {
     return res.status(404).json(error);
   }
 };
+
+export const deleteManyAccesses = async (req: Request, res: Response) => {
+  try {
+    await prisma.access.deleteMany();
+
+    return res.status(200).json({ message: "Níveis de acesso deletados" });
+  } catch (error) {
+    return res.status(400).json({ message: "Erro desconhecido", error });
+  }
+};
