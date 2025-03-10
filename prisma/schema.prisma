@@ -8,28 +8,37 @@ datasource db {
 }
 
 model User {
-  id              String     @id @default(uuid())
+  id              String       @id @default(uuid())
   name            String
-  cpf             String     @unique
-  email           String     @unique
+  cpf             String       @unique
+  email           String       @unique
   password        String
   position        Position
-  status          UserStatus @default(ACTIVE)
-  Access          Access?    @relation(fields: [accessId], references: [id])
-  accessId        String?
+  status          UserStatus   @default(ACTIVE)
+  userAccess      UserAccess[]
   // Relacionamentos inversos
-  TicketsCreated  Ticket[]   @relation("TicketsCreated")
-  TicketsAssigned Ticket[]   @relation("TicketsAssigned")
-  created_at      DateTime   @default(now())
-  updated_at      DateTime   @updatedAt
+  TicketsCreated  Ticket[]     @relation("TicketsCreated")
+  TicketsAssigned Ticket[]     @relation("TicketsAssigned")
+  created_at      DateTime     @default(now())
+  updated_at      DateTime     @updatedAt
+}
+
+model UserAccess {
+  id         String   @id @default(uuid())
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  Access     Access?  @relation(fields: [accessId], references: [id])
+  accessId   String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Access {
-  id         String   @id @default(uuid())
-  name       String   @unique
-  User       User[]
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id         String       @id @default(uuid())
+  name       String       @unique
+  userAccess UserAccess[]
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
 }
 
 model Ticket {
