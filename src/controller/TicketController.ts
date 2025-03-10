@@ -17,6 +17,13 @@ export const createTicket = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Usuário inexistente!" });
     }
 
+    // Verifica se o usuário está ativo
+    if (createdBy.status !== "ACTIVE") {
+      return res
+        .status(403)
+        .json({ message: "Usuário inativo! Acesso negado" });
+    }
+
     // Verifica se o responsável pelo ticket existe
     const assignedTo = await prisma.user.findUnique({
       where: { id: assignedToId },
@@ -26,6 +33,12 @@ export const createTicket = async (req: Request, res: Response) => {
       return res
         .status(404)
         .json({ message: "Usuário responsável inexistente!" });
+    }
+
+    if (assignedTo.status !== "ACTIVE") {
+      return res
+        .status(403)
+        .json({ message: "Usuário responsável inativo! Acesso negado" });
     }
 
     const ticket = await prisma.ticket.create({
