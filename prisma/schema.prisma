@@ -8,35 +8,43 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  cpf        String   @unique
-  email      String   @unique
-  password   String
-  position   Position
-  Access     Access?  @relation(fields: [accessId], references: [id])
-  accessId   String?
-  Ticket     Ticket[]
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id              String   @id @default(uuid())
+  name            String
+  cpf             String   @unique
+  email           String   @unique
+  password        String
+  position        Position
+  Access          Access?  @relation(fields: [accessId], references: [id])
+  accessId        String?
+  // Relacionamentos inversos
+  TicketsCreated  Ticket[] @relation("TicketsCreated")
+  TicketsAssigned Ticket[] @relation("TicketsAssigned")
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
 }
 
 model Access {
   id         String   @id @default(uuid())
   name       String   @unique
-  user       User[]
+  User       User[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 model Ticket {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  status       Status
+  priority     Priority
+  // Usuário que criou o ticket
+  CreatedBy    User     @relation("TicketsCreated", fields: [createdById], references: [id])
+  createdById  String
+  // Usuário responsável pelo ticket
+  AssignedTo   User     @relation("TicketsAssigned", fields: [assignedToId], references: [id])
+  assignedToId String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 }
 
 //Enums
@@ -52,4 +60,10 @@ enum Status {
   OPEN
   IN_PROGRESS
   CLOSED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
 }
