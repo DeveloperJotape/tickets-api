@@ -71,10 +71,29 @@ export const createUser = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(200).json(user);
+    return res.status(201).json(user);
   } catch (error) {
     return res.status(400).json(error);
   }
+};
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        position: true,
+        Access: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return res.status(200).json(users);
+  } catch (error) {}
 };
 
 export const deleteManyUser = async (req: Request, res: Response) => {

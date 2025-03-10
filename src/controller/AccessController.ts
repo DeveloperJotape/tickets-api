@@ -11,7 +11,7 @@ export const createAccess = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(200).json(access);
+    return res.status(201).json(access);
   } catch (error) {
     return res.status(400).json(error);
   }
@@ -22,6 +22,6 @@ export const getAccesses = async (req: Request, res: Response) => {
     const accesses = await prisma.access.findMany();
     return res.status(200).json(accesses);
   } catch (error) {
-    return res.status(200).json(error);
+    return res.status(404).json(error);
   }
 };
