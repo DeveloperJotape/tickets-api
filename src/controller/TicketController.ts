@@ -81,3 +81,36 @@ export const getAllTickets = async (req: Request, res: Response) => {
     return res.status(404).json(error);
   }
 };
+
+/* Busca tickets pelo nome do usuário */
+export const getTicketsByUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    // Busca os tickets relacionados ao funcionário pelo ID
+    const tickets = await prisma.ticket.findMany({
+      where: {
+        OR: [{ createdById: userId }, { assignedToId: userId }],
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        status: true,
+        priority: true,
+        CreatedBy: {
+          select: { name: true },
+        },
+        AssignedTo: {
+          select: { name: true },
+        },
+        created_at: true,
+        updated_at: true,
+      },
+    });
+
+    return res.status(200).json(tickets);
+  } catch (error) {
+    return res.status(404).json(error);
+  }
+};

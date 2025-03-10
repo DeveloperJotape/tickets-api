@@ -6,7 +6,11 @@ import {
   getAllUsers,
 } from "./controller/UserController";
 import { createAccess, getAccesses } from "./controller/AccessController";
-import { createTicket, getAllTickets } from "./controller/TicketController";
+import {
+  createTicket,
+  getAllTickets,
+  getTicketsByUser,
+} from "./controller/TicketController";
 
 export const router = Router();
 
@@ -22,3 +26,4 @@ router.get("/access", getAccesses);
 // Ticket
 router.post("/ticket/:userId", createTicket);
 router.get("/ticket", getAllTickets);
+router.get("/ticket/:userId", getTicketsByUser);
