@@ -8,19 +8,20 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(uuid())
+  id              String     @id @default(uuid())
   name            String
-  cpf             String   @unique
-  email           String   @unique
+  cpf             String     @unique
+  email           String     @unique
   password        String
   position        Position
-  Access          Access?  @relation(fields: [accessId], references: [id])
+  status          UserStatus @default(ACTIVE)
+  Access          Access?    @relation(fields: [accessId], references: [id])
   accessId        String?
   // Relacionamentos inversos
-  TicketsCreated  Ticket[] @relation("TicketsCreated")
-  TicketsAssigned Ticket[] @relation("TicketsAssigned")
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  TicketsCreated  Ticket[]   @relation("TicketsCreated")
+  TicketsAssigned Ticket[]   @relation("TicketsAssigned")
+  created_at      DateTime   @default(now())
+  updated_at      DateTime   @updatedAt
 }
 
 model Access {
@@ -66,4 +67,9 @@ enum Priority {
   LOW
   MEDIUM
   HIGH
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
 }
