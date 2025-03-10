@@ -95,7 +95,9 @@ export const getAllUsers = async (req: Request, res: Response) => {
       },
     });
     return res.status(200).json(users);
-  } catch (error) {}
+  } catch (error) {
+    return res.status(400).json(error);
+  }
 };
 
 export const deleteManyUser = async (req: Request, res: Response) => {
