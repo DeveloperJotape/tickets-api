@@ -4,7 +4,8 @@ import { prisma } from "../database/prisma";
 export const createTicket = async (req: Request, res: Response) => {
   try {
     const { title, description, status, priority, assignedToId } = req.body;
-    const { userId } = req.params;
+
+    const userId = req.user.id;
 
     // Verifica se o usuário que está criando o ticket existe
     const createdBy = await prisma.user.findUnique({
@@ -96,7 +97,7 @@ export const getAllTickets = async (req: Request, res: Response) => {
 };
 
 /* Busca tickets pelo nome do usuário */
-export const getTicketsByUser = async (req: Request, res: Response) => {
+export const getTicketsByUserId = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 
