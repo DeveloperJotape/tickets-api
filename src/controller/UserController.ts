@@ -6,7 +6,9 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, cpf, email, password, position, accessName } = req.body;
 
-    // Verifica a existência do email
+    /* 
+     *  Verifica a existência do email
+    */
     const isUserUniqueEmail = await prisma.user.findUnique({
       where: {
         email,
@@ -17,7 +19,9 @@ export const createUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Email já cadastrado" });
     }
 
-    // Verifica a existência do CPF
+    /* 
+    *  Verifica a existência do CPF
+    */
     const isUserUniqueCpf = await prisma.user.findUnique({
       where: {
         cpf,
@@ -28,7 +32,9 @@ export const createUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "CPF já cadastrado" });
     }
 
-    // Verifica a existência do nível de acesso
+    /*
+    * Verifica a existência do nível de acesso
+    */
     const isAccessName = await prisma.access.findUnique({
       where: {
         name: accessName,
@@ -41,7 +47,9 @@ export const createUser = async (req: Request, res: Response) => {
         .json({ message: "Nível de acesso não está cadastrado" });
     }
 
-    // Criptografia para a senha
+    /* 
+    * Criptografia para a senha
+    */
     const hashPassword = await hash(password, 8);
 
     const user = await prisma.user.create({
@@ -57,7 +65,9 @@ export const createUser = async (req: Request, res: Response) => {
           },
         },
       },
-      // Seleciona dados específicos para serem exibidos
+      /* 
+      * Seleciona dados específicos para serem exibidos
+      */
       select: {
         id: true,
         name: true,
@@ -94,11 +104,48 @@ export const getAllUsers = async (req: Request, res: Response) => {
         },
       },
     });
+
+    if(!users) {
+      return res.status(404).json({ message: "Nenhum usuário encontrado!" }); 
+    }
+
     return res.status(200).json(users);
   } catch (error) {
     return res.status(400).json(error);
   }
 };
+
+export const getUniqueUser = async (req: Request, res: Response) => {
+  try {
+    const {id} = req.user
+    const user = await prisma.user.findUnique({
+      where: {
+        id
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        position: true,
+        status: true,
+        Access: {
+          select: {
+            name: true,
+          },
+        },
+      }
+    })
+
+    if(!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    return res.status(200).json(user)
+    
+  } catch (error) {
+    return res.status(400).json(error)
+  }
+}
 
 export const deleteManyUser = async (req: Request, res: Response) => {
   try {
